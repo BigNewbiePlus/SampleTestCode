@@ -5,6 +5,11 @@
 created on 2018/03/20
 @author fangdenghui
 功能: 爬取所有明星名字
+思路: 1: 百度搜索“明星姓名大全”，网页第一项（本人使用Chrome浏览器）
+      2: 检测网页代码源：因为展现是slider模型，点击切换不同页面观察加载数据情况，发现包含姓名只有一项(js文件)，明星图片多项(忽略)
+      3: 只观察js文件，发现不同页面只有pn和rn两个变量值发生改变，通过多次切换吗，发现pn表示起始位置，rn表示返回数量(return number)
+      4: 观察Header，请求给予GET，使用python的urllib即可发送请求
+      5: 查看Response，为json文件结果，使用json库解析即可
 '''
 
 print(__doc__)
@@ -13,6 +18,7 @@ import urllib
 import urllib2
 import json
 import sys
+
 
 def craw_starname(filename):
     '''

@@ -34,13 +34,13 @@ def extract_ssnames_by_js(driver, url):
 
     js = """
 
-    var parent = arguments[0];
+    var parent = document;
     var div = parent.getElementById('SearchResult');
-    var imgs = div.getElementByTagName('img');
+    var imgs = div.getElementsByTagName('img');
 
-    result='';
+    result= new Array(imgs.length);
     for(var i=0;i<imgs.length;i++){
-        result += imgs[i].alt + ',';
+        result[i] = imgs[i].alt;
     }
     return result;
     """
@@ -57,16 +57,17 @@ def craw_ssname():
 
     ss_names = list()
 
-    driver = webdriver.Chrome('chromedriver') # 加载驱动
+    driver = webdriver.Chrome('./chromedriver') # 加载驱动
 
     for i in range(9):
         url = 'http://star.yule.com.cn/sports/pn_'+str(i+1)+'/'
         page_names = extract_ssnames_by_js(driver, url)
         ss_names.extend(page_names)
+    print 'craw over!'
     driver.close()
     return ss_names
 
-def savelist(filename, names):
+def savelisttofile(filename, names):
     '''
     Desc 保存列表到文件中
 
@@ -78,14 +79,14 @@ def savelist(filename, names):
     fw = open(filename, 'w')
 
     for name in names:
-        fw.write(name+'\n')
+        fw.write(name.encode('utf8')+'\n')
 
     fw.close()
 
 if __name__ == '__main__':
-    filename = 'sport_starname.txt'
-    names = craw_sport_starname()
-    savelist(filename)
+    filename = 'sstarname.txt'
+    names = craw_ssname()
+    savelisttofile(filename, names)
 
 
 
